@@ -1,0 +1,63 @@
+# Servidor MySQL de uso general para prácticas de SQL.
+#
+#   Iniciar:    docker compose up -d
+#   Detener:    docker compose stop
+#   Reiniciar desde cero (borra todas las bases y usuarios):
+#               docker compose down -v
+#
+# Conexión desde MySQL Workbench:
+#   Hostname: 127.0.0.1 · Port: 3306 · Username: root · Password: root
+
+name: mysql
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      TZ: America/Bogota
+    configs:
+      - source: mysql_cnf
+        target: /etc/my.cnf
+    ports:
+      - "3306:3307"
+    volumes:
+      - mysql_datos:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -proot --silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  # Reenvía las conexiones externas a MySQL desde dentro del propio
+  # contenedor. Así las cuentas creadas como 'usuario'@'localhost' también
+  # pueden conectarse desde el equipo anfitrión (Workbench, consola, etc.).
+  puente:
+    image: alpine/socat:latest
+    container_name: mysql_puente
+    restart: unless-stopped
+    network_mode: "service:mysql"
+    command: TCP-LISTEN:3307,fork,reuseaddr TCP:127.0.0.1:3306
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+# Configuración de la imagen oficial sin "skip-name-resolve": con esa opción
+# el servidor no reconoce como "localhost" las conexiones locales por TCP.
+configs:
+  mysql_cnf:
+    content: |
+      [mysqld]
+      datadir=/var/lib/mysql
+      socket=/var/run/mysqld/mysqld.sock
+      secure-file-priv=/var/lib/mysql-files
+      user=mysql
+      pid-file=/var/run/mysqld/mysqld.pid
+      [client]
+      socket=/var/run/mysqld/mysqld.sock
+
+volumes:
+  mysql_datos:
+    name: mysql_datos
