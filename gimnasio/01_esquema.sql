@@ -1,13 +1,20 @@
 /* =====================================================================
-   00 · PREPARACIÓN — 01_esquema.sql
+   CASO GIMNASIO · 01_esquema.sql — DEL MODELO A LAS TABLAS
    ---------------------------------------------------------------------
    Crea (o reinicia) la base de datos del gimnasio con sus 5 tablas,
-   tal como quedó el diseño normalizado en 3FN.
+   tal como quedó el diseño normalizado en 3FN. Todo este archivo es
+   DDL: define la ESTRUCTURA, todavía sin datos.
+
+   Antes de ejecutarlo, leerlo con el modelo relacional a la vista y
+   ubicar en cada CREATE TABLE:
+     - la clave primaria (PRIMARY KEY)
+     - las claves foráneas (FOREIGN KEY … REFERENCES)
+     - las reglas del negocio (NOT NULL, UNIQUE, CHECK, DEFAULT)
 
    Cuándo ejecutarlo:
-     - Antes de los laboratorios 03 a 07.
+     - Antes del laboratorio (03_laboratorio.sql).
      - Siempre que la base quede dañada o con datos modificados.
-   Después de este archivo se ejecuta 02_datos.sql.
+   Se ejecuta COMPLETO. Después de este archivo se ejecuta 02_datos.sql.
 
    ATENCIÓN: borra la base "gimnasio" si ya existe.
    ===================================================================== */
@@ -34,7 +41,7 @@ CREATE TABLE clientes (
     direccion_barrio  VARCHAR(40),
     direccion_ciudad  VARCHAR(40),
     fecha_registro    DATE           NOT NULL DEFAULT (CURRENT_DATE),
-    saldo             DECIMAL(10,2)  NOT NULL DEFAULT 0,
+    saldo             DECIMAL(10,2)  NOT NULL,
     CONSTRAINT chk_saldo CHECK (saldo >= 0)
 );
 

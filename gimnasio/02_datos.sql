@@ -1,10 +1,12 @@
 /* =====================================================================
-   00 · PREPARACIÓN — 02_datos.sql
+   CASO GIMNASIO · 02_datos.sql — LOS DATOS DE PRUEBA
    ---------------------------------------------------------------------
-   Carga los datos de prueba del gimnasio. Se ejecuta justo después de
-   01_esquema.sql. Todos los laboratorios 03 a 07 parten de estos datos,
-   así que los resultados que se describen en las guías coinciden con
-   lo que aparece en pantalla.
+   Carga los datos del gimnasio. Todo este archivo es DML: llena las
+   tablas que creó 01_esquema.sql, sin cambiar su estructura.
+
+   Se ejecuta COMPLETO, justo después de 01_esquema.sql, y deja la base
+   en un estado conocido: 5 entrenadores, 6 clientes, 5 clases,
+   8 inscripciones y 8 pagos.
    ===================================================================== */
 
 SET NAMES utf8mb4;   -- tildes y ñ correctas también desde la consola
