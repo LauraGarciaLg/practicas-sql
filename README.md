@@ -1,18 +1,45 @@
 # Prácticas de SQL
 
-Material para aprender SQL **ejecutando** instrucciones en un servidor MySQL y **observando** lo que ocurre. El repositorio trae un servidor listo para levantar con Docker y una colección de casos de práctica, cada uno en su propia carpeta.
+Material para aprender SQL **ejecutando** instrucciones en un servidor MySQL y **observando** lo que ocurre. El repositorio trae un servidor listo para levantar con Docker y **dos bases de datos de práctica**, cada una en su carpeta y con su propio `README.md`.
 
 ---
 
-## 1. Contenido
+## 1. Las dos bases de datos
 
-| Carpeta | Caso | Temas |
+| | [gimnasio/](gimnasio/) | [tienda/](tienda/) |
 |---|---|---|
-| [gimnasio/](gimnasio/) | Sistema de gestión de un gimnasio | DDL, DML y DCL · lenguaje SQL · consultas y subconsultas · tratamiento de datos · transacciones · vistas · seguridad y control de acceso |
+| **Para qué** | Introducción: el primer contacto con SQL | Práctica a fondo de cada tema |
+| **Cuándo** | Al empezar la unidad, justo después del modelo E-R y la normalización | Después del gimnasio, durante el resto de la unidad |
+| **Base de datos** | `gimnasio` · 5 tablas, 32 filas | `tienda` · 10 tablas, cerca de 950 filas |
+| **Tablas** | `entrenadores`, `clientes`, `clases`, `inscripciones`, `pagos` | `sucursales`, `empleados`, `categorias`, `proveedores`, `productos`, `clientes`, `pedidos`, `detalle_pedido`, `pagos`, `envios` |
+| **Material** | 1 laboratorio: práctica guiada y 7 ejercicios | 8 laboratorios (guía y ejercicios) y un reto integrador |
+| **Se aprende** | Qué son DDL, DML, DCL y TCL y qué modifica cada uno | A usarlos de verdad: `ALTER TABLE`, JOIN, GROUP BY, subconsultas, vistas, transacciones, permisos y roles |
 
-Cada caso tiene su propio `README.md` con el orden de trabajo y las indicaciones particulares.
+### Ruta recomendada
 
-El archivo `docker-compose.yml` levanta un servidor MySQL vacío que sirve para cualquier caso o práctica propia.
+1. **Preparar el equipo:** levantar el servidor (sección 2) y conectarse (sección 3).
+2. **Gimnasio:** ejecutar `01_esquema.sql` y `02_datos.sql` y trabajar `03_laboratorio.sql`. Es el mismo gimnasio que se diseñó en clase, ahora convertido en tablas.
+3. **Tienda:** seguir los laboratorios en orden, del 01 al 09.
+
+| Tienda | Tema | |
+|---|---|---|
+| 01 | DDL | Construir la base desde cero y transformarla |
+| 02 | DML | Insertar, actualizar y eliminar datos |
+| 03 | Consultas | `SELECT` sobre una tabla: filtros, orden, funciones |
+| 04 | JOIN | Combinar varias tablas |
+| 05 | Agrupación | `GROUP BY`, `HAVING` y funciones de agregación |
+| 06 | Subconsultas y vistas | Subconsultas, CTE, funciones de ventana, vistas |
+| 07 | TCL | Transacciones y trabajo con dos sesiones |
+| 08 | DCL | Usuarios, permisos y roles |
+| 09 | Reto integrador | Un encargo completo, sin guía |
+
+### Lo que tienen en común
+
+- Cada base se crea con sus propios scripts y **se puede recargar las veces que haga falta**: si algo se daña durante una práctica, se vuelven a ejecutar y queda como al principio.
+- Las dos conviven en el mismo servidor sin afectarse. Ambas tienen tablas llamadas `clientes` y `pagos`, pero son distintas: cada script empieza con `USE gimnasio;` o `USE tienda;` para indicar sobre cuál trabaja.
+- Las guías se ejecutan **un bloque a la vez**, leyendo los comentarios `OBSERVAR` y respondiendo las `PREGUNTAS` en el cuaderno.
+
+El archivo `docker-compose.yml` levanta un servidor MySQL vacío que sirve para los dos casos y para cualquier práctica propia.
 
 ---
 
@@ -49,7 +76,7 @@ Los datos de conexión son los mismos para cualquier cliente SQL:
 
 **MySQL Workbench:** clic en **⊕** junto a *MySQL Connections*, completar los datos y pulsar *Test Connection*.
 
-Las cuentas que crean las prácticas (por ejemplo `'recepcion1'@'localhost'`) se conectan igual, cambiando solo usuario y contraseña.
+Las cuentas que crean las prácticas (por ejemplo `'tienda_vendedor'@'localhost'`) se conectan igual, cambiando solo usuario y contraseña.
 
 ---
 
