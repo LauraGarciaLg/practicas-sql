@@ -1,25 +1,26 @@
 # Prácticas de SQL
 
-Material para aprender SQL **ejecutando** instrucciones en un servidor MySQL y **observando** lo que ocurre. El repositorio trae un servidor listo para levantar con Docker y **dos bases de datos de práctica**, cada una en su carpeta y con su propio `README.md`.
+Material para aprender SQL **ejecutando** instrucciones en un servidor MySQL y **observando** lo que ocurre. El repositorio trae un servidor listo para levantar con Docker y **tres bases de datos de práctica**, cada una en su carpeta y con su propio `README.md`.
 
 ---
 
-## 1. Las dos bases de datos
+## 1. Las bases de datos
 
-| | [gimnasio/](gimnasio/) | [tienda/](tienda/) |
-|---|---|---|
-| **Para qué** | Introducción: el primer contacto con SQL | Práctica a fondo de cada tema |
-| **Cuándo** | Al empezar la unidad, justo después del modelo E-R y la normalización | Después del gimnasio, durante el resto de la unidad |
-| **Base de datos** | `gimnasio` · 5 tablas, 32 filas | `tienda` · 10 tablas, cerca de 950 filas |
-| **Tablas** | `entrenadores`, `clientes`, `clases`, `inscripciones`, `pagos` | `sucursales`, `empleados`, `categorias`, `proveedores`, `productos`, `clientes`, `pedidos`, `detalle_pedido`, `pagos`, `envios` |
-| **Material** | 1 laboratorio: práctica guiada y 7 ejercicios | 8 laboratorios (guía y ejercicios) y un reto integrador |
-| **Se aprende** | Qué son DDL, DML, DCL y TCL y qué modifica cada uno | A usarlos de verdad: `ALTER TABLE`, JOIN, GROUP BY, subconsultas, vistas, transacciones, permisos y roles |
+| | [gimnasio/](gimnasio/) | [academia/](academia/) | [tienda/](tienda/) |
+|---|---|---|---|
+| **Para qué** | Introducción: el primer contacto con SQL | Practicar DDL, DML y consultas con JOIN sobre un modelo pequeño | Práctica a fondo de cada tema |
+| **Cuándo** | Al empezar la unidad, justo después del modelo E-R y la normalización | Después del gimnasio | Durante el resto de la unidad |
+| **Base de datos** | `gimnasio` · 5 tablas, 32 filas | `academia` · 5 tablas, 77 filas | `tienda` · 10 tablas, cerca de 950 filas |
+| **Tablas** | `entrenadores`, `clientes`, `clases`, `inscripciones`, `pagos` | `profesores`, `estudiantes`, `cursos`, `matriculas`, `pagos` | `sucursales`, `empleados`, `categorias`, `proveedores`, `productos`, `clientes`, `pedidos`, `detalle_pedido`, `pagos`, `envios` |
+| **Material** | 1 laboratorio: práctica guiada y 7 ejercicios | 28 ejercicios y sus soluciones | 8 laboratorios (guía y ejercicios) y un reto integrador |
+| **Se aprende** | Qué son DDL, DML, DCL y TCL y qué modifica cada uno | `CREATE`/`ALTER`/`DROP`, `INSERT`/`UPDATE`/`DELETE`, errores de restricciones, JOIN y GROUP BY | A usarlos de verdad: `ALTER TABLE`, JOIN, GROUP BY, subconsultas, vistas, transacciones, permisos y roles |
 
 ### Ruta recomendada
 
 1. **Preparar el equipo:** levantar el servidor (sección 2) y conectarse (sección 3).
 2. **Gimnasio:** ejecutar `01_esquema.sql` y `02_datos.sql` y trabajar `03_laboratorio.sql`. Es el mismo gimnasio que se diseñó en clase, ahora convertido en tablas.
-3. **Tienda:** seguir los laboratorios en orden, del 01 al 09.
+3. **Academia:** ejecutar `01_esquema.sql` y `02_datos.sql` y resolver `03_ejercicios.sql`.
+4. **Tienda:** seguir los laboratorios en orden, del 01 al 09.
 
 | Tienda | Tema | |
 |---|---|---|
@@ -36,10 +37,10 @@ Material para aprender SQL **ejecutando** instrucciones en un servidor MySQL y *
 ### Lo que tienen en común
 
 - Cada base se crea con sus propios scripts y **se puede recargar las veces que haga falta**: si algo se daña durante una práctica, se vuelven a ejecutar y queda como al principio.
-- Las dos conviven en el mismo servidor sin afectarse. Ambas tienen tablas llamadas `clientes` y `pagos`, pero son distintas: cada script empieza con `USE gimnasio;` o `USE tienda;` para indicar sobre cuál trabaja.
+- Todas conviven en el mismo servidor sin afectarse. Varias tienen tablas con el mismo nombre (`clientes`, `pagos`), pero son distintas: cada script empieza con `USE gimnasio;`, `USE academia;` o `USE tienda;` para indicar sobre cuál trabaja.
 - Las guías se ejecutan **un bloque a la vez**, leyendo los comentarios `OBSERVAR` y respondiendo las `PREGUNTAS` en el cuaderno.
 
-El archivo `docker-compose.yml` levanta un servidor MySQL vacío que sirve para los dos casos y para cualquier práctica propia.
+El archivo `docker-compose.yml` levanta un servidor MySQL vacío que sirve para todos los casos y para cualquier práctica propia.
 
 ---
 
