@@ -5,8 +5,8 @@
    resultado esperado en los comentarios.
 
    - Partes 1 y 2: se ejecutan en orden sobre la base recién cargada.
-   - Parte 3: antes de empezarla se recarga la base (01_esquema.sql y
-     02_datos.sql) para que los resultados coincidan con los comentarios.
+   - Partes 3 y 4: antes de empezarlas se recarga la base (01_esquema.sql
+     y 02_datos.sql) para que los resultados coincidan con los comentarios.
    ===================================================================== */
 
 SET NAMES utf8mb4;
@@ -278,3 +278,183 @@ GROUP BY ciudad
 HAVING COUNT(*) >= 3
 ORDER BY estudiantes DESC;
 -- Aguachica 5 · Ocaña 3
+
+
+/* =====================================================================
+   PARTE 4 · FUNCIONES DE AGREGACIÓN
+   COUNT, SUM, MIN, MAX, AVG, GROUP BY, DISTINCT, HAVING y LIMIT.
+   Solo consultas: se trabaja con la base tal como quedó en la parte 3.
+   ===================================================================== */
+
+-- 4.1  COUNT. ¿Cuántos estudiantes hay? ¿Cuántos tienen correo y cuántos
+--      teléfono? Resolverlo en una sola consulta.
+--      PREGUNTA: ¿por qué COUNT(*) y COUNT(email) dan números distintos?
+SELECT COUNT(*) AS 'estudiantes', COUNT(email) AS 'con_email',
+       COUNT(telefono) AS 'con_telefono'
+FROM estudiantes;
+-- 12 · 10 · 11. COUNT(columna) no cuenta los NULL; COUNT(*) cuenta filas.
+
+-- 4.2  SUM. ¿Cuánto ha recaudado la academia en total? ¿Cuánto ha pagado
+--      Ana Beltrán (id 1)?
+SELECT SUM(valor) AS 'total_recaudado' FROM pagos;          -- 3590000
+SELECT SUM(valor) AS 'total_ana' FROM pagos WHERE id_estudiante = 1;   -- 525000
+
+-- 4.3  MIN y MAX. Precio del curso más barato y del más caro. Fecha del
+--      primer y del último pago. Por último, aplicar MIN y MAX a nombre y
+--      a fecha_nacimiento de estudiantes.
+--      PREGUNTA: ¿qué significan MIN y MAX sobre un texto y sobre una
+--      fecha? ¿Quién es el estudiante más joven?
+SELECT MIN(precio) AS 'mas_barato', MAX(precio) AS 'mas_caro' FROM cursos;
+-- 90000 · 220000
+SELECT MIN(fecha_pago) AS 'primer_pago', MAX(fecha_pago) AS 'ultimo_pago' FROM pagos;
+-- 2026-02-02 09:00:00 · 2026-05-10 12:00:00
+SELECT MIN(nombre), MAX(nombre), MIN(fecha_nacimiento), MAX(fecha_nacimiento)
+FROM estudiantes;
+-- Ana Beltrán · Valeria Quiroga · 2004-04-18 · 2011-02-25
+-- En texto: orden alfabético. En fechas: la más antigua y la más reciente.
+-- La fecha de nacimiento MAYOR es la del más joven: Valeria Quiroga.
+
+-- 4.4  AVG. Precio promedio de los cursos, con y sin redondear (ROUND).
+--      Valor promedio de los pagos de 'Mensualidad'.
+SELECT AVG(precio) AS 'promedio', ROUND(AVG(precio)) AS 'promedio_redondeado'
+FROM cursos;
+-- 167500.000000 · 167500
+SELECT AVG(valor) AS 'promedio_mensualidad' FROM pagos WHERE concepto = 'Mensualidad';
+-- 151500
+
+-- 4.5  GROUP BY con varias funciones.
+--      a) Por nivel de curso: cantidad de cursos, precio mínimo, máximo y
+--         promedio (con 2 decimales).
+--      b) Por estudiante: cantidad de pagos, total, pago menor, pago mayor
+--         y promedio, del que más ha pagado al que menos.
+--      PREGUNTA: ¿por qué Tomás Navarro no aparece en b)?
+-- a)
+SELECT nivel, COUNT(*) AS 'cursos', MIN(precio) AS 'minimo', MAX(precio) AS 'maximo',
+       ROUND(AVG(precio), 2) AS 'promedio'
+FROM cursos
+GROUP BY nivel;
+-- Básico 5 · 90000 · 200000 · 152000.00
+-- Intermedio 3 · 170000 · 220000 · 193333.33
+
+-- b)
+SELECT e.nombre, COUNT(*) AS 'pagos', SUM(p.valor) AS 'total',
+       MIN(p.valor) AS 'menor', MAX(p.valor) AS 'mayor', ROUND(AVG(p.valor)) AS 'promedio'
+FROM pagos p
+INNER JOIN estudiantes e
+ON p.id_estudiante = e.id_estudiante
+GROUP BY e.id_estudiante, e.nombre
+ORDER BY total DESC;
+-- 11 filas: primero Ana Beltrán (5 pagos, 525000), al final Isabel Romero
+-- (1 pago, 40000). Tomás no aparece: no tiene pagos y el INNER JOIN lo
+-- descarta antes de agrupar.
+
+-- 4.6  DISTINCT.
+--      a) Ciudades de donde vienen los estudiantes, sin repetir.
+--      b) En matriculas: cuántas filas hay, cuántos estudiantes distintos
+--         y cuántos cursos distintos (COUNT(DISTINCT …)).
+--      c) Combinaciones distintas de concepto y valor en pagos.
+--      PREGUNTA: en c), ¿DISTINCT se aplica a una columna o a la fila?
+-- a)
+SELECT DISTINCT ciudad FROM estudiantes;
+-- 4 ciudades: Aguachica, Ocaña, Bucaramanga, Gamarra
+
+-- b)
+SELECT COUNT(*) AS 'filas', COUNT(DISTINCT id_estudiante) AS 'estudiantes',
+       COUNT(DISTINCT id_curso) AS 'cursos'
+FROM matriculas;
+-- 17 · 10 · 7
+
+-- c)
+SELECT DISTINCT concepto, valor FROM pagos ORDER BY concepto, valor;
+-- 11 filas. DISTINCT se aplica a la fila completa: elimina las filas
+-- que repiten a la vez concepto Y valor (las 11 matrículas de 40000
+-- quedan en una sola fila).
+
+-- 4.7  DISTINCT vs GROUP BY.
+--      a) Obtener las ciudades sin repetir usando GROUP BY en vez de
+--         DISTINCT y comparar con 4.6 a).
+--      b) Agregar cuántos estudiantes hay en cada ciudad.
+--      PREGUNTA: ¿se puede resolver b) con DISTINCT? ¿Cuándo dan lo mismo
+--      DISTINCT y GROUP BY y cuándo hace falta GROUP BY?
+-- a) Mismo resultado que SELECT DISTINCT ciudad
+SELECT ciudad FROM estudiantes GROUP BY ciudad;
+
+-- b)
+SELECT ciudad, COUNT(*) AS 'estudiantes'
+FROM estudiantes
+GROUP BY ciudad;
+-- Aguachica 5 · Ocaña 3 · Bucaramanga 2 · Gamarra 2
+-- Sin funciones de agregación, DISTINCT y GROUP BY dan las mismas filas.
+-- Para calcular algo POR CADA grupo (COUNT, SUM, AVG…) hace falta GROUP BY:
+-- DISTINCT solo quita repetidos.
+
+-- 4.8  HAVING.
+--      a) Estudiantes que han pagado en total más de 400000.
+--      b) Cursos de nivel Básico con 3 o más matriculados.
+--      PREGUNTA: en b), ¿qué condición va en WHERE y cuál en HAVING? ¿Por
+--      qué no se puede escribir WHERE COUNT(*) >= 3?
+-- a)
+SELECT e.nombre, SUM(p.valor) AS 'total'
+FROM pagos p
+INNER JOIN estudiantes e
+ON p.id_estudiante = e.id_estudiante
+GROUP BY e.id_estudiante, e.nombre
+HAVING SUM(p.valor) > 400000
+ORDER BY total DESC;
+-- Ana Beltrán 525000 · Luis Carrillo 480000 · Mateo Salazar 470000 ·
+-- Juliana Rueda 440000
+
+-- b)
+SELECT c.nombre, COUNT(*) AS 'matriculados'
+FROM matriculas m
+INNER JOIN cursos c
+ON m.id_curso = c.id_curso
+WHERE c.nivel = 'Básico'
+GROUP BY c.id_curso, c.nombre
+HAVING COUNT(*) >= 3;
+-- Guitarra Acústica 3 · Técnica Vocal 3 · Teoría Musical 4
+-- WHERE filtra FILAS antes de agrupar (nivel); HAVING filtra GRUPOS después
+-- (COUNT). WHERE COUNT(*) falla porque cuando se evalúa WHERE todavía no
+-- existen los grupos (error 1111: Invalid use of group function).
+
+-- 4.9  LIMIT.
+--      a) El curso con más matriculados.
+--      b) Los 2 estudiantes que más han pagado.
+--      c) Ordenando los cursos del más caro al más barato, mostrar los
+--         puestos 4, 5 y 6 (LIMIT … OFFSET …).
+-- a)
+SELECT c.nombre, COUNT(*) AS 'matriculados'
+FROM matriculas m
+INNER JOIN cursos c
+ON m.id_curso = c.id_curso
+GROUP BY c.id_curso, c.nombre
+ORDER BY matriculados DESC
+LIMIT 1;
+-- Teoría Musical 4
+
+-- b)
+SELECT e.nombre, SUM(p.valor) AS 'total'
+FROM pagos p
+INNER JOIN estudiantes e
+ON p.id_estudiante = e.id_estudiante
+GROUP BY e.id_estudiante, e.nombre
+ORDER BY total DESC
+LIMIT 2;
+-- Ana Beltrán 525000 · Luis Carrillo 480000
+
+-- c)
+SELECT nombre, precio FROM cursos ORDER BY precio DESC LIMIT 3 OFFSET 3;
+-- Piano Básico 180000 · Guitarra Eléctrica 170000 · Guitarra Acústica 150000
+
+-- 4.10 Todo junto. Por mes de pago (DATE_FORMAT(fecha_pago, '%Y-%m')):
+--      cantidad de pagos, total y promedio redondeado, solo de los meses
+--      que recaudaron 1000000 o más, ordenado por mes.
+SELECT DATE_FORMAT(fecha_pago, '%Y-%m') AS 'mes', COUNT(*) AS 'pagos',
+       SUM(valor) AS 'total', ROUND(AVG(valor)) AS 'promedio'
+FROM pagos
+GROUP BY mes
+HAVING SUM(valor) >= 1000000
+ORDER BY mes;
+-- 2026-02 · 12 · 1195000 · 99583
+-- 2026-03 · 12 · 1470000 · 122500
+-- (abril recaudó 885000 y mayo 40000: quedan fuera por el HAVING)

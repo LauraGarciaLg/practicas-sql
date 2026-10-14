@@ -4,10 +4,11 @@
    ---------------------------------------------------------------------
    Requisito: haber ejecutado 01_esquema.sql y luego 02_datos.sql.
 
-   Este archivo tiene tres partes:
+   Este archivo tiene cuatro partes:
      PARTE 1 · DDL         cambiar la ESTRUCTURA (ejercicios 1.1 a 1.6)
      PARTE 2 · DML         cambiar los DATOS     (ejercicios 2.1 a 2.11)
      PARTE 3 · Consultas   leer los datos        (ejercicios 3.1 a 3.11)
+     PARTE 4 · Agregación  resumir los datos     (ejercicios 4.1 a 4.10)
 
    Cómo trabajar:
      - Escribir la solución debajo de cada enunciado y ejecutarla sola
@@ -15,7 +16,8 @@
      - Después de cada cambio, comprobarlo con DESCRIBE o SELECT.
      - Las partes 1 y 2 se hacen en orden: unas dependen de otras.
      - ANTES de la parte 3, recargar la base (01_esquema.sql y
-       02_datos.sql) para trabajar con los datos originales.
+       02_datos.sql) para trabajar con los datos originales. Las partes
+       3 y 4 solo consultan: no hace falta recargar entre ellas.
 
    Tablas: profesores, estudiantes, cursos, matriculas, pagos.
    ===================================================================== */
@@ -169,3 +171,71 @@ DESCRIBE pagos;
 
 -- 3.11 Ciudades con 3 o más estudiantes y cuántos tiene cada una.
 
+
+/* =====================================================================
+   PARTE 4 · FUNCIONES DE AGREGACIÓN
+   COUNT, SUM, MIN, MAX, AVG, GROUP BY, DISTINCT, HAVING y LIMIT.
+   Solo consultas: se trabaja con la base tal como quedó en la parte 3.
+   ===================================================================== */
+
+-- 4.1  COUNT. ¿Cuántos estudiantes hay? ¿Cuántos tienen correo y cuántos
+--      teléfono? Resolverlo en una sola consulta.
+--      PREGUNTA: ¿por qué COUNT(*) y COUNT(email) dan números distintos?
+
+
+-- 4.2  SUM. ¿Cuánto ha recaudado la academia en total? ¿Cuánto ha pagado
+--      Ana Beltrán (id 1)?
+
+
+-- 4.3  MIN y MAX. Precio del curso más barato y del más caro. Fecha del
+--      primer y del último pago. Por último, aplicar MIN y MAX a nombre y
+--      a fecha_nacimiento de estudiantes.
+--      PREGUNTA: ¿qué significan MIN y MAX sobre un texto y sobre una
+--      fecha? ¿Quién es el estudiante más joven?
+
+
+-- 4.4  AVG. Precio promedio de los cursos, con y sin redondear (ROUND).
+--      Valor promedio de los pagos de 'Mensualidad'.
+
+
+-- 4.5  GROUP BY con varias funciones.
+--      a) Por nivel de curso: cantidad de cursos, precio mínimo, máximo y
+--         promedio (con 2 decimales).
+--      b) Por estudiante: cantidad de pagos, total, pago menor, pago mayor
+--         y promedio, del que más ha pagado al que menos.
+--      PREGUNTA: ¿por qué Tomás Navarro no aparece en b)?
+
+
+-- 4.6  DISTINCT.
+--      a) Ciudades de donde vienen los estudiantes, sin repetir.
+--      b) En matriculas: cuántas filas hay, cuántos estudiantes distintos
+--         y cuántos cursos distintos (COUNT(DISTINCT …)).
+--      c) Combinaciones distintas de concepto y valor en pagos.
+--      PREGUNTA: en c), ¿DISTINCT se aplica a una columna o a la fila?
+
+
+-- 4.7  DISTINCT vs GROUP BY.
+--      a) Obtener las ciudades sin repetir usando GROUP BY en vez de
+--         DISTINCT y comparar con 4.6 a).
+--      b) Agregar cuántos estudiantes hay en cada ciudad.
+--      PREGUNTA: ¿se puede resolver b) con DISTINCT? ¿Cuándo dan lo mismo
+--      DISTINCT y GROUP BY y cuándo hace falta GROUP BY?
+
+
+-- 4.8  HAVING.
+--      a) Estudiantes que han pagado en total más de 400000.
+--      b) Cursos de nivel Básico con 3 o más matriculados.
+--      PREGUNTA: en b), ¿qué condición va en WHERE y cuál en HAVING? ¿Por
+--      qué no se puede escribir WHERE COUNT(*) >= 3?
+
+
+-- 4.9  LIMIT.
+--      a) El curso con más matriculados.
+--      b) Los 2 estudiantes que más han pagado.
+--      c) Ordenando los cursos del más caro al más barato, mostrar los
+--         puestos 4, 5 y 6 (LIMIT … OFFSET …).
+
+
+-- 4.10 Todo junto. Por mes de pago (DATE_FORMAT(fecha_pago, '%Y-%m')):
+--      cantidad de pagos, total y promedio redondeado, solo de los meses
+--      que recaudaron 1000000 o más, ordenado por mes.
