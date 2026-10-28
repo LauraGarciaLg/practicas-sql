@@ -26,10 +26,10 @@ Los datos traen a propósito algunos casos para que las consultas den resultados
 |---|---|---|---|
 | 1 | `01_esquema.sql` | Crea la base `academia` con sus 5 tablas | Completo |
 | 2 | `02_datos.sql` | Carga los datos de prueba | Completo |
-| 3 | `03_ejercicios.sql` | 38 ejercicios: DDL (1.x), DML (2.x), consultas (3.x) y funciones de agregación (4.x) | Un ejercicio a la vez |
+| 3 | `03_ejercicios.sql` | 55 ejercicios en dos bloques: **A · lo ya visto** (DDL, DML, INNER JOIN, COUNT, SUM y LIMIT, partes 1 a 4) y **B · temas nuevos** (LIKE, MIN/MAX/AVG, DISTINCT, HAVING, LEFT y RIGHT JOIN, partes 5 a 10). Cada parte empieza con una definición corta de sus instrucciones | Un ejercicio a la vez |
 | — | `04_soluciones.sql` | Una solución por ejercicio, con el resultado esperado | Para el docente |
 
-Los pasos 1 y 2 dejan la base en un estado conocido y se repiten cuando haga falta: **antes de las partes 3 y 4** de los ejercicios y siempre que algo se dañe.
+Los pasos 1 y 2 dejan la base en un estado conocido y se repiten cuando haga falta: **antes de la parte 3** de los ejercicios y siempre que algo se dañe.
 
 ---
 
@@ -40,4 +40,4 @@ Los pasos 1 y 2 dejan la base en un estado conocido y se repiten cuando haga fal
 | Error 1049 *Unknown database 'academia'* | Ejecutar `01_esquema.sql` y `02_datos.sql`. |
 | Error 1175 en un UPDATE o DELETE | Ejecutar `SET SQL_SAFE_UPDATES = 0;` (está al inicio de los ejercicios). |
 | Error 1050 *Table 'salas' already exists* | El ejercicio ya se había hecho: recargar la base y repetirlo. |
-| Los resultados no coinciden con las soluciones | Recargar la base antes de las partes 3 y 4. |
+| Los resultados no coinciden con las soluciones | Recargar la base antes de la parte 3. |

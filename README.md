@@ -12,7 +12,7 @@ Material para aprender SQL **ejecutando** instrucciones en un servidor MySQL y *
 | **Cuándo** | Al empezar la unidad, justo después del modelo E-R y la normalización | Después del gimnasio | Durante el resto de la unidad |
 | **Base de datos** | `gimnasio` · 5 tablas, 32 filas | `academia` · 5 tablas, 77 filas | `tienda` · 10 tablas, cerca de 950 filas |
 | **Tablas** | `entrenadores`, `clientes`, `clases`, `inscripciones`, `pagos` | `profesores`, `estudiantes`, `cursos`, `matriculas`, `pagos` | `sucursales`, `empleados`, `categorias`, `proveedores`, `productos`, `clientes`, `pedidos`, `detalle_pedido`, `pagos`, `envios` |
-| **Material** | 1 laboratorio: práctica guiada y 7 ejercicios | 38 ejercicios y sus soluciones | 8 laboratorios (guía y ejercicios) y un reto integrador |
+| **Material** | 1 laboratorio: práctica guiada y 7 ejercicios | 55 ejercicios y sus soluciones | 8 laboratorios (guía y ejercicios) y un reto integrador |
 | **Se aprende** | Qué son DDL, DML, DCL y TCL y qué modifica cada uno | `CREATE`/`ALTER`/`DROP`, `INSERT`/`UPDATE`/`DELETE`, errores de restricciones, JOIN, funciones de agregación, GROUP BY y HAVING | A usarlos de verdad: `ALTER TABLE`, JOIN, GROUP BY, subconsultas, vistas, transacciones, permisos y roles |
 
 ### Ruta recomendada
