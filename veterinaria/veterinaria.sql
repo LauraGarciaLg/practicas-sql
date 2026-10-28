@@ -1,5 +1,5 @@
 /* =====================================================================
-   PARCIAL #2 - BASES DE DATOS
+   CASO VETERINARIA · veterinaria.sql — EJERCICIO Y SOLUCIONES
    ---------------------------------------------------------------------
    La clínica Huellitas necesita una base de datos para su veterinaria.
    De cada veterinario se registra tarjeta profesional (requerida y
@@ -15,7 +15,6 @@
       foráneas y las restricciones que piden las reglas. Luego insertar,
       con datos inventados que respeten las reglas, 3 veterinarios,
       3 animales y 6 atenciones repartidas entre varios veterinarios.
-      (2 puntos)
    2. Mostrar la fecha, el nombre del animal, el nombre del veterinario
       que lo atendió, el motivo y el valor de cada atención, de la más
       costosa a la más barata.
@@ -26,22 +25,22 @@
    ===================================================================== */
 
 /* =====================================================================
-   RESPUESTAS (para el docente)
+   SOLUCIONES
    ---------------------------------------------------------------------
    Modelo esperado, con 3 tablas:
      veterinarios 1 ── N animales       FK: veterinario de cabecera
      animales     N ── M veterinarios   tabla intermedia: atenciones
 
-   Los datos son un ejemplo: cada estudiante inventa los suyos, así que
-   los resultados de los puntos 2 a 4 se comparan contra sus propios
-   datos. Este archivo se ejecuta completo.
+   Los datos son un ejemplo: si inventas los tuyos, los resultados de
+   los ejercicios 2 a 4 cambian según esos datos. Este archivo se
+   ejecuta completo.
    ===================================================================== */
 
 SET NAMES utf8mb4;
 SET SQL_SAFE_UPDATES = 0;
 
 
-/* ---------- 1 · ESQUEMA Y DATOS (2 puntos) ---------- */
+/* ---------- 1 · ESQUEMA Y DATOS ---------- */
 
 DROP DATABASE IF EXISTS veterinaria;
 CREATE DATABASE veterinaria CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
