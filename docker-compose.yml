@@ -22,7 +22,7 @@ services:
       - "3306:3306"
     # La carpeta del repositorio queda visible dentro del contenedor, en
     # /practicas, y es la carpeta de trabajo. Así, desde la consola de
-    # MySQL, un archivo se ejecuta con: SOURCE biblioteca/01_base_datos.sql;
+    # MySQL, un archivo se ejecuta con: SOURCE academia/01_esquema.sql;
     working_dir: /practicas
     volumes:
       - mysql_datos:/var/lib/mysql

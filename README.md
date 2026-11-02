@@ -1,56 +1,52 @@
 # Prácticas de SQL
 
-Material para aprender SQL **ejecutando** instrucciones en un servidor MySQL y **observando** lo que ocurre. El repositorio trae un servidor listo para levantar con Docker y **cuatro bases de datos de práctica**, cada una en su carpeta y con su propio `README.md`.
+Material para aprender SQL **ejecutando** instrucciones en un servidor MySQL y **observando** lo que ocurre. El repositorio trae **tres bases de datos de práctica** y una actividad de transacciones desde Python, cada una en su carpeta.
 
 ---
 
 ## 1. Las bases de datos
 
-| | [gimnasio/](gimnasio/) | [academia/](academia/) | [biblioteca/](biblioteca/) | [tienda/](tienda/) |
-|---|---|---|---|---|
-| **Para qué** | Introducción: el primer contacto con SQL | Practicar DDL, DML y consultas con JOIN sobre un modelo pequeño | Taller: practicar todas las instrucciones vistas sobre una base nueva | Práctica a fondo de cada tema |
-| **Cuándo** | Al empezar la unidad, justo después del modelo E-R y la normalización | Después del gimnasio | Después de la academia | Durante el resto de la unidad |
-| **Base de datos** | `gimnasio` · 5 tablas, 32 filas | `academia` · 5 tablas, 77 filas | `biblioteca` · 5 tablas, 57 filas | `tienda` · 10 tablas, cerca de 950 filas |
-| **Tablas** | `entrenadores`, `clientes`, `clases`, `inscripciones`, `pagos` | `profesores`, `estudiantes`, `cursos`, `matriculas`, `pagos` | `autores`, `libros`, `socios`, `prestamos`, `multas` | `sucursales`, `empleados`, `categorias`, `proveedores`, `productos`, `clientes`, `pedidos`, `detalle_pedido`, `pagos`, `envios` |
-| **Material** | 1 laboratorio: práctica guiada y 7 ejercicios | 55 ejercicios y sus soluciones | Taller de 10 ejercicios | 8 laboratorios (guía y ejercicios) y un reto integrador |
-| **Se aprende** | Qué son DDL, DML, DCL y TCL y qué modifica cada uno | `CREATE`/`ALTER`/`DROP`, `INSERT`/`UPDATE`/`DELETE`, errores de restricciones, JOIN, funciones de agregación, GROUP BY y HAVING | Lo mismo, sin repetir ejercicios: LIMIT y OFFSET, LIKE, MIN/MAX/AVG, DISTINCT, HAVING, LEFT y RIGHT JOIN y DATE_FORMAT | A usarlos de verdad: `ALTER TABLE`, JOIN, GROUP BY, subconsultas, vistas, transacciones, permisos y roles |
+| | [gimnasio/](gimnasio/) | [academia/](academia/) | [veterinaria/](veterinaria/) |
+|---|---|---|---|
+| **Para qué** | Introducción: el primer contacto con SQL | Practicar DDL, DML y consultas sobre un modelo pequeño | Ejercicio integrador: construir una base a partir de un enunciado |
+| **Cuándo** | Al empezar la unidad, justo después del modelo E-R y la normalización | Después del gimnasio | Después de la academia |
+| **Base de datos** | `gimnasio` · 5 tablas, 32 filas | `academia` · 5 tablas, 77 filas | `veterinaria` · 3 tablas, 12 filas |
+| **Tablas** | `entrenadores`, `clientes`, `clases`, `inscripciones`, `pagos` | `profesores`, `estudiantes`, `cursos`, `matriculas`, `pagos` | `veterinarios`, `animales`, `atenciones` |
+| **Material** | 1 laboratorio: práctica guiada y 7 ejercicios | 55 ejercicios y sus soluciones | 4 ejercicios y su solución, en un solo archivo |
+| **Se aprende** | Qué son DDL, DML, DCL y TCL y qué modifica cada uno | Lo ya visto (`CREATE`/`ALTER`/`DROP`, `INSERT`/`UPDATE`/`DELETE`, INNER JOIN, COUNT, SUM y LIMIT) y temas nuevos (LIKE, MIN/MAX/AVG, DISTINCT, HAVING, LEFT y RIGHT JOIN) | Pasar de las reglas del negocio a tablas con sus claves y restricciones, cargar datos y consultarlos con JOIN y GROUP BY |
 
 ### Ruta recomendada
 
-1. **Preparar el equipo:** levantar el servidor (sección 2) y conectarse (sección 3).
+1. **Preparar el equipo:** instalar MySQL (sección 2) y conectarse (sección 3).
 2. **Gimnasio:** ejecutar `01_esquema.sql` y `02_datos.sql` y trabajar `03_laboratorio.sql`. Es el mismo gimnasio que se diseñó en clase, ahora convertido en tablas.
 3. **Academia:** ejecutar `01_esquema.sql` y `02_datos.sql` y resolver `03_ejercicios.sql`.
-4. **Biblioteca:** ejecutar `01_base_datos.sql` y resolver el taller `02_taller.sql`.
-5. **Tienda:** seguir los laboratorios en orden, del 01 al 09.
-6. **Python y MySQL:** actividad investigativa en casa, antes de la clase de transacciones. Seguir la guía de [python-mysql/](python-mysql/): conectar Python con MySQL y observar COMMIT y ROLLBACK en 5 ejercicios cortos.
-
-| Tienda | Tema | |
-|---|---|---|
-| 01 | DDL | Construir la base desde cero y transformarla |
-| 02 | DML | Insertar, actualizar y eliminar datos |
-| 03 | Consultas | `SELECT` sobre una tabla: filtros, orden, funciones |
-| 04 | JOIN | Combinar varias tablas |
-| 05 | Agrupación | `GROUP BY`, `HAVING` y funciones de agregación |
-| 06 | Subconsultas y vistas | Subconsultas, CTE, funciones de ventana, vistas |
-| 07 | TCL | Transacciones y trabajo con dos sesiones |
-| 08 | DCL | Usuarios, permisos y roles |
-| 09 | Reto integrador | Un encargo completo, sin guía |
+4. **Veterinaria:** resolver el enunciado del inicio de `veterinaria.sql`; el resto del archivo es la solución.
+5. **Python y MySQL:** actividad investigativa en casa, antes de la clase de transacciones. Seguir la guía de [python-mysql/](python-mysql/): conectar Python con MySQL y observar COMMIT y ROLLBACK en 5 ejercicios cortos sobre la base `academia`.
 
 ### Lo que tienen en común
 
 - Cada base se crea con sus propios scripts y **se puede recargar las veces que haga falta**: si algo se daña durante una práctica, se vuelven a ejecutar y queda como al principio.
-- Todas conviven en el mismo servidor sin afectarse. Varias tienen tablas con el mismo nombre (`clientes`, `pagos`), pero son distintas: cada script empieza con `USE gimnasio;`, `USE academia;`, `USE biblioteca;` o `USE tienda;` para indicar sobre cuál trabaja.
-- Las guías se ejecutan **un bloque a la vez**, leyendo los comentarios `OBSERVAR` y respondiendo las `PREGUNTAS` en el cuaderno.
-
-El archivo `docker-compose.yml` levanta un servidor MySQL vacío que sirve para todos los casos y para cualquier práctica propia.
+- Todas conviven en el mismo servidor sin afectarse. Varias tienen tablas con el mismo nombre (`pagos`), pero son distintas: cada script empieza con `USE gimnasio;`, `USE academia;` o `USE veterinaria;` para indicar sobre cuál trabaja.
+- Los ejercicios se ejecutan **uno a la vez**, respondiendo las preguntas que traen.
 
 ---
 
-## 2. Levantar el servidor
+## 2. Preparar el equipo
 
-Se necesita [Docker](https://docs.docker.com/get-docker/) con Docker Compose.
+### Descargar el repositorio
 
-Desde la carpeta del repositorio:
+En la página del repositorio en GitHub, botón verde **Code → Download ZIP**, y descomprimir el archivo. Quien use Git puede clonarlo y actualizarlo con `git pull`.
+
+### Instalar MySQL en Windows
+
+1. Descargar **MySQL Installer** desde https://dev.mysql.com/downloads/installer/.
+2. Instalar **MySQL Server 8.0** y **MySQL Workbench**.
+3. Durante la instalación se define la **contraseña de root**: anotarla, se pide cada vez que se conecta.
+4. Al terminar, MySQL queda como un servicio de Windows llamado **MySQL80** que arranca solo con el equipo. Si algún día no conecta, revisar en *Servicios* de Windows que esté *En ejecución*.
+
+### Alternativa: Docker
+
+Quien prefiera no instalar MySQL puede usar el servidor que trae el repositorio en `docker-compose.yml`. Se necesita [Docker Desktop](https://docs.docker.com/get-docker/). Desde la carpeta del repositorio:
 
 ```bash
 docker compose up -d      # iniciar
@@ -59,7 +55,7 @@ docker compose stop       # detener (los datos se conservan)
 docker compose down -v    # borrar todo y empezar de cero
 ```
 
-También sirve un MySQL Server 8.0 o superior instalado directamente en el equipo.
+Con Docker, la contraseña de root es `root`.
 
 ---
 
@@ -72,22 +68,22 @@ Los datos de conexión son los mismos para cualquier cliente SQL:
 | Host | `127.0.0.1` |
 | Puerto | `3306` |
 | Usuario | `root` |
-| Contraseña | `root` |
+| Contraseña | La que se definió al instalar MySQL (con Docker: `root`) |
 | Base de datos | (vacío) |
 
-**DBeaver:** *Database → New Database Connection → MySQL*, completar los datos y pulsar *Test Connection*. La primera vez pide descargar el driver. Si aparece *Public Key Retrieval is not allowed*, en la pestaña *Driver properties* se cambia `allowPublicKeyRetrieval` a `true`.
-
 **MySQL Workbench:** clic en **⊕** junto a *MySQL Connections*, completar los datos y pulsar *Test Connection*.
+
+**DBeaver:** *Database → New Database Connection → MySQL*, completar los datos y pulsar *Test Connection*. La primera vez pide descargar el driver. Si aparece *Public Key Retrieval is not allowed*, en la pestaña *Driver properties* se cambia `allowPublicKeyRetrieval` a `true`.
 
 ---
 
 ## 4. Ejecutar un script
 
-| Acción | DBeaver | MySQL Workbench |
+| Acción | MySQL Workbench | DBeaver |
 |---|---|---|
 | La instrucción donde está el cursor | Ctrl + Enter | Ctrl + Enter |
-| Un bloque seleccionado (varias instrucciones) | Alt + X | Ctrl + Shift + Enter |
-| El archivo completo (sin selección) | Alt + X | Ctrl + Shift + Enter |
+| Un bloque seleccionado (varias instrucciones) | Ctrl + Shift + Enter | Alt + X |
+| El archivo completo (sin selección) | Ctrl + Shift + Enter | Alt + X |
 
 En DBeaver, **Ctrl + Enter con varias instrucciones seleccionadas las envía como una sola** y produce un error de sintaxis (1064). Para varias instrucciones se usa Alt + X.
 
@@ -95,51 +91,45 @@ En DBeaver, **Ctrl + Enter con varias instrucciones seleccionadas las envía com
 
 ## 5. La terminal de MySQL
 
-Además de DBeaver y Workbench, MySQL tiene una consola de texto. Sirve para cargar una base rápido o para trabajar en un equipo sin cliente gráfico.
+Además de Workbench y DBeaver, MySQL tiene una consola de texto. Sirve para cargar una base rápido o para trabajar en un equipo sin cliente gráfico.
 
 Hay que distinguir dos terminales:
 
-- **La terminal del sistema** (`$`, `PS C:\>`, `C:\>` o `sh-5.1#`) entiende comandos del sistema operativo, como `docker` o `mysql`, pero no SQL.
+- **La terminal del sistema** (`C:\>` o `PS C:\>`) entiende comandos de Windows, pero no SQL.
 - **La consola de MySQL** (`mysql>`) entiende SQL.
 
-Escribir `SHOW DATABASES;` en la terminal del sistema da un error como `command not found`.
+Escribir `SHOW DATABASES;` en la terminal del sistema da un error como *"SHOW" no se reconoce como un comando*.
 
 ### Entrar
 
-**Con Docker** (el servidor de este repositorio). En una terminal del sistema, con el servidor levantado (sección 2):
+En el menú Inicio, abrir **MySQL 8.0 Command Line Client** y escribir la contraseña de root.
+
+También se puede desde una terminal del sistema:
+
+```
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p --default-character-set=utf8mb4
+```
+
+Pide la contraseña, que no se ve mientras se escribe. Se entró cuando el prompt cambia a `mysql>`. Para salir: `exit`.
+
+`--default-character-set=utf8mb4` hace que las tildes y la ñ se vean y se guarden bien.
+
+**Con Docker**, desde una terminal del sistema y con el servidor levantado:
 
 ```bash
 docker exec -it mysql mysql -uroot -proot --default-character-set=utf8mb4
 ```
-
-Si ya se está *dentro* del contenedor (por ejemplo, con *Attach Shell* de VS Code, y el prompt es `sh-5.1#`), basta con:
-
-```bash
-mysql -uroot -proot --default-character-set=utf8mb4
-```
-
-**Sin Docker** (MySQL Server instalado en el equipo):
-
-```bash
-mysql -h 127.0.0.1 -P 3306 -u root -p
-```
-
-Pide la contraseña, que no se ve mientras se escribe. Es la que se definió al instalar MySQL. En Windows también sirve **MySQL 8.0 Command Line Client**, en el menú Inicio. Si sale *'mysql' no se reconoce como un comando*, se usa la ruta completa: `"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p`.
-
-En los dos casos, se entró cuando el prompt cambia a `mysql>`. Para salir: `exit`.
-
-`--default-character-set=utf8mb4` hace que las tildes y la ñ se vean y se guarden bien.
 
 ### Comandos básicos
 
 | Comando | Qué hace |
 |---|---|
 | `SHOW DATABASES;` | Lista las bases de datos del servidor |
-| `USE biblioteca;` | Elige la base con la que se va a trabajar |
+| `USE academia;` | Elige la base con la que se va a trabajar |
 | `SELECT DATABASE();` | Muestra qué base está elegida |
 | `SHOW TABLES;` | Lista las tablas de la base elegida |
-| `DESCRIBE libros;` | Muestra las columnas de una tabla, sus tipos y sus claves |
-| `SHOW CREATE TABLE libros\G` | Muestra el CREATE TABLE completo, con sus restricciones |
+| `DESCRIBE cursos;` | Muestra las columnas de una tabla, sus tipos y sus claves |
+| `SHOW CREATE TABLE cursos\G` | Muestra el CREATE TABLE completo, con sus restricciones |
 | `exit` | Sale de la consola |
 
 ### Cómo se escribe
@@ -152,14 +142,13 @@ En los dos casos, se entró cuando el prompt cambia a `mysql>`. Para salir: `exi
 
 ### Ejecutar un archivo completo
 
-Ya dentro de `mysql>`, con la ruta del archivo tal como se ve en el repositorio:
+Ya dentro de `mysql>`, con la ruta completa del archivo y barras `/` (no `\`), aunque sea Windows:
 
 ```sql
-SOURCE biblioteca/01_base_datos.sql;
+SOURCE C:/Users/usuario/Downloads/practicas-sql/academia/01_esquema.sql;
 ```
 
-- **Con Docker** funciona así, porque la carpeta del repositorio está compartida con el contenedor.
-- **Sin Docker** funciona igual si la consola se abrió desde la carpeta del repositorio. Si no, se usa la ruta completa, con barras `/` incluso en Windows: `SOURCE C:/Users/usuario/practicas-sql/biblioteca/01_base_datos.sql;`.
+Con Docker basta la ruta tal como se ve en el repositorio, porque la carpeta está compartida con el contenedor: `SOURCE academia/01_esquema.sql;`.
 
 Las líneas que pasan rápido en pantalla son los resultados de cada instrucción del archivo; al final aparece la tabla de verificación.
 
@@ -167,14 +156,13 @@ Las líneas que pasan rápido en pantalla son los resultados de cada instrucció
 
 | Mensaje | Causa y solución |
 |---|---|
-| `SHOW: command not found` o *"SHOW" no se reconoce* | Se escribió SQL en la terminal del sistema. Primero hay que entrar a `mysql>`. |
-| `ERROR 1045: Access denied … (using password: NO)` | Faltaron el usuario y la contraseña: `mysql -uroot -proot`. |
-| `ERROR 1046: No database selected` | Falta elegir la base: `USE biblioteca;`. |
-| `ERROR 2002` o `ERROR 2003: Can't connect to MySQL server` | El servidor no está levantado o todavía está arrancando. Con Docker: `docker compose ps` y esperar a que diga *healthy*. |
-| `Error: No such container: mysql` | El contenedor no existe o no está corriendo: `docker compose up -d` desde la carpeta del repositorio. |
-| `mysql: command not found` o *'mysql' no se reconoce* | El cliente de MySQL no está instalado en el equipo. Usar el comando con Docker o la ruta completa del `mysql.exe`. |
+| *"SHOW" no se reconoce como un comando* | Se escribió SQL en la terminal del sistema. Primero hay que entrar a `mysql>`. |
+| *'mysql' no se reconoce como un comando* | Usar **MySQL 8.0 Command Line Client** o la ruta completa del `mysql.exe`. |
+| `ERROR 1045: Access denied` | La contraseña de root no es la correcta. |
+| `ERROR 1046: No database selected` | Falta elegir la base: `USE academia;`. |
+| `ERROR 2003: Can't connect to MySQL server` | El servicio **MySQL80** está detenido: iniciarlo en *Servicios* de Windows. Con Docker: `docker compose up -d` y esperar a que `docker compose ps` diga *healthy*. |
 | Las tildes salen como `Ã¡` o `?` | Faltó `--default-character-set=utf8mb4` al entrar. |
-| `Failed to open file 'biblioteca/01_base_datos.sql', error: 2` | La consola no encuentra el archivo. Con Docker: el contenedor se creó antes de que se compartiera la carpeta; ejecutar `docker compose up -d` desde la carpeta del repositorio y volver a entrar. Sin Docker: usar la ruta completa. |
+| `Failed to open file '...', error: 2` | La ruta del archivo está mal: revisarla y usar barras `/`. |
 
 ---
 
