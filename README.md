@@ -22,6 +22,7 @@ Material para aprender SQL **ejecutando** instrucciones en un servidor MySQL y *
 3. **Academia:** ejecutar `01_esquema.sql` y `02_datos.sql` y resolver `03_ejercicios.sql`.
 4. **Biblioteca:** ejecutar `01_base_datos.sql` y resolver el taller `02_taller.sql`.
 5. **Tienda:** seguir los laboratorios en orden, del 01 al 09.
+6. **Python y MySQL:** actividad investigativa en casa, antes de la clase de transacciones. Seguir la guía de [python-mysql/](python-mysql/): conectar Python con MySQL y observar COMMIT y ROLLBACK en 5 ejercicios cortos.
 
 | Tienda | Tema | |
 |---|---|---|
