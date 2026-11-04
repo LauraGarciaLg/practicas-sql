@@ -8,11 +8,11 @@
 
 | Tabla | Qué guarda | Filas |
 |---|---|---|
-| `profesores` | Profesores y el instrumento que enseñan | 6 |
-| `estudiantes` | Estudiantes de la academia | 12 |
-| `cursos` | Cursos, con cupo, precio mensual y profesor (puede ser NULL) | 8 |
-| `matriculas` | Qué estudiante está en qué curso (muchos a muchos) | 17 |
-| `pagos` | Pagos de cada estudiante: `Matrícula`, `Mensualidad` o `Material` | 34 |
+| `profesores` | Profesores y el instrumento que enseñan | 8 |
+| `estudiantes` | Estudiantes de la academia | 30 |
+| `cursos` | Cursos, con cupo, precio mensual y profesor (puede ser NULL) | 11 |
+| `matriculas` | Qué estudiante está en qué curso (muchos a muchos) | 49 |
+| `pagos` | Pagos de cada estudiante: `Matrícula`, `Mensualidad` o `Material` | 289 |
 
 A diferencia del gimnasio, cada pago de `Mensualidad` o `Material` indica **a qué curso corresponde** (`id_curso`), así que se puede saber cuánto pagó un estudiante por cada curso. El pago de `Matrícula` es la cuota de ingreso y no tiene curso (`id_curso` en NULL).
 
@@ -28,8 +28,11 @@ Los datos traen a propósito algunos casos para que las consultas den resultados
 | 2 | `02_datos.sql` | Carga los datos de prueba | Completo |
 | 3 | `03_ejercicios.sql` | 55 ejercicios en dos bloques: **A · lo ya visto** (DDL, DML, INNER JOIN, COUNT, SUM y LIMIT, partes 1 a 4) y **B · temas nuevos** (LIKE, MIN/MAX/AVG, DISTINCT, HAVING, LEFT y RIGHT JOIN, partes 5 a 10). Cada parte empieza con una definición corta de sus instrucciones | Un ejercicio a la vez |
 | — | `04_soluciones.sql` | Una solución por ejercicio, con el resultado esperado | Para el docente |
+| 4 | `05_taller.sql` | Taller de 13 consultas sobre la base cargada, en 4 bloques: consultar una tabla, contar y agrupar, unir tablas y reportes. En cada bloque, primero consultas sencillas y al final una más trabajable. No crea tablas ni cambia datos | Un ejercicio a la vez |
 
-Los pasos 1 y 2 dejan la base en un estado conocido y se repiten cuando haga falta: **antes de la parte 3** de los ejercicios y siempre que algo se dañe.
+Los pasos 1 y 2 dejan la base en un estado conocido y se repiten cuando haga falta: **antes de la parte 3** de los ejercicios, **antes del taller** y siempre que algo se dañe.
+
+**Entrega del taller:** el archivo `05_taller.sql` con las consultas y las respuestas a las preguntas.
 
 ---
 

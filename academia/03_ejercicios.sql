@@ -174,13 +174,13 @@ DESCRIBE pagos;
 
 -- 3.1  Listar cada profesor con sus cursos: profesor, curso, cupo máximo
 --      y precio.
---      PREGUNTA: hay 8 cursos, ¿cuál falta y por qué?
+--      PREGUNTA: hay 11 cursos, ¿cuál falta y por qué?
 
 
 -- 3.2  Listar los estudiantes con sus cursos matriculados: id y nombre
 --      del estudiante, curso, precio, profesor y fecha de matrícula, de la
 --      más reciente a la más antigua.
---      PREGUNTA: hay 17 matrículas, ¿por qué salen menos filas?
+--      PREGUNTA: hay 49 matrículas, ¿por qué salen menos filas?
 
 
 -- 3.3  COUNT. ¿Cuántos estudiantes hay? ¿Cuántos tienen correo y cuántos
@@ -378,7 +378,7 @@ DESCRIBE pagos;
 
 
 -- 8.4  HAVING.
---      a) Estudiantes que han pagado en total más de 400000.
+--      a) Estudiantes que han pagado en total más de 2000000.
 --      b) Cursos de nivel Básico con 3 o más matriculados.
 --      PREGUNTA: en b), ¿qué condición va en WHERE y cuál en HAVING? ¿Por
 --      qué no se puede escribir WHERE COUNT(*) >= 3?
@@ -439,4 +439,4 @@ DESCRIBE pagos;
 
 -- 10.1 Todo junto. Por mes de pago (DATE_FORMAT(fecha_pago, '%Y-%m')):
 --      cantidad de pagos, total y promedio redondeado, solo de los meses
---      que recaudaron 1000000 o más, ordenado por mes.
+--      que recaudaron 5000000 o más, ordenado por mes.

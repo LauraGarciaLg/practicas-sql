@@ -10,16 +10,16 @@ Material para aprender SQL **ejecutando** instrucciones en un servidor MySQL y *
 |---|---|---|---|---|
 | **Para qué** | Introducción: el primer contacto con SQL | Practicar DDL, DML y consultas sobre un modelo pequeño | Ejercicio integrador: construir una base a partir de un enunciado | Practicar subconsultas y vistas |
 | **Cuándo** | Al empezar la unidad, justo después del modelo E-R y la normalización | Después del gimnasio | Después de la academia | Después de la veterinaria |
-| **Base de datos** | `gimnasio` · 5 tablas, 32 filas | `academia` · 5 tablas, 77 filas | `veterinaria` · 3 tablas, 12 filas | `biblioteca` · 5 tablas, 57 filas |
+| **Base de datos** | `gimnasio` · 5 tablas, 32 filas | `academia` · 5 tablas, 387 filas | `veterinaria` · 3 tablas, 12 filas | `biblioteca` · 5 tablas, 57 filas |
 | **Tablas** | `entrenadores`, `clientes`, `clases`, `inscripciones`, `pagos` | `profesores`, `estudiantes`, `cursos`, `matriculas`, `pagos` | `veterinarios`, `animales`, `atenciones` | `autores`, `libros`, `socios`, `prestamos`, `multas` |
-| **Material** | 1 laboratorio: práctica guiada y 7 ejercicios | 55 ejercicios y sus soluciones | 4 ejercicios y su solución, en un solo archivo | 2 archivos: 14 ejercicios de subconsultas y 9 de vistas |
+| **Material** | 1 laboratorio: práctica guiada y 7 ejercicios | 55 ejercicios y sus soluciones, y un taller de 13 consultas | 4 ejercicios y su solución, en un solo archivo | 2 archivos: 14 ejercicios de subconsultas y 9 de vistas |
 | **Se aprende** | Qué son DDL, DML, DCL y TCL y qué modifica cada uno | Lo ya visto (`CREATE`/`ALTER`/`DROP`, `INSERT`/`UPDATE`/`DELETE`, INNER JOIN, COUNT, SUM y LIMIT) y temas nuevos (LIKE, MIN/MAX/AVG, DISTINCT, HAVING, LEFT y RIGHT JOIN) | Pasar de las reglas del negocio a tablas con sus claves y restricciones, cargar datos y consultarlos con JOIN y GROUP BY | Subconsultas de un valor, con IN/NOT IN y EXISTS/NOT EXISTS, en el SELECT y en el FROM; crear, modificar y eliminar vistas, y guardar datos a través de ellas con WITH CHECK OPTION |
 
 ### Ruta recomendada
 
 1. **Preparar el equipo:** instalar MySQL (sección 2) y conectarse (sección 3).
 2. **Gimnasio:** ejecutar `01_esquema.sql` y `02_datos.sql` y trabajar `03_laboratorio.sql`. Es el mismo gimnasio que se diseñó en clase, ahora convertido en tablas.
-3. **Academia:** ejecutar `01_esquema.sql` y `02_datos.sql` y resolver `03_ejercicios.sql`.
+3. **Academia:** ejecutar `01_esquema.sql` y `02_datos.sql`, resolver `03_ejercicios.sql` y luego el taller `05_taller.sql`.
 4. **Veterinaria:** resolver el enunciado del inicio de `veterinaria.sql`; el resto del archivo es la solución.
 5. **Biblioteca:** ejecutar `01_base_datos.sql` y resolver `02_subconsultas.sql` y después `03_vistas.sql`.
 6. **Python y MySQL:** actividad investigativa en casa, antes de la clase de transacciones. Seguir la guía de [python-mysql/](python-mysql/): conectar Python con MySQL y observar COMMIT y ROLLBACK en 5 ejercicios cortos sobre la base `academia`.

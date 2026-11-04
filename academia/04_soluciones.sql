@@ -110,8 +110,9 @@ SELECT * FROM salas;
 -- 2.2  Asignar salas: los cursos de piano a la Sala Beethoven, Teoría
 --      Musical al Auditorio y todos los demás a la Sala Mozart.
 --      ¿Cuántas filas afectó cada UPDATE?
-UPDATE cursos SET id_sala = 2;                                                -- 8 filas
-UPDATE cursos SET id_sala = 1 WHERE id_curso = 1 OR id_curso = 2;             -- 2 filas (piano)
+UPDATE cursos SET id_sala = 2;                                                -- 11 filas
+UPDATE cursos SET id_sala = 1
+WHERE id_curso = 1 OR id_curso = 2 OR id_curso = 9;                           -- 3 filas (piano)
 UPDATE cursos SET id_sala = 3 WHERE id_curso = 8;                             -- 1 fila
 --      NOTA: Primero todos a la Sala Mozart y luego se corrigen los
 --            de piano y Teoría Musical.
@@ -124,7 +125,7 @@ SELECT nombre, id_sala FROM cursos;
 INSERT INTO estudiantes (documento, nombre, email, telefono, ciudad, fecha_nacimiento)
 VALUES ('1098013', 'Camila Duarte', 'camila@mail.com', '3113334455', 'Aguachica', '2009-01-19');
 SELECT * FROM estudiantes WHERE documento = '1098013';
--- id_estudiante = 13 (AUTO_INCREMENT) y fecha_registro = hoy (DEFAULT)
+-- id_estudiante = 31 (AUTO_INCREMENT) y fecha_registro = hoy (DEFAULT)
 
 -- 2.4  Tomás Navarro (id 11) se matricula hoy en Violín Inicial (id 6) y
 --      paga la cuota de ingreso (40000) y la primera mensualidad del curso.
@@ -146,9 +147,10 @@ INSERT INTO matriculas (id_estudiante, id_curso) VALUES (99, 1);
 -- Error 1452: Cannot add or update a child row: a foreign key constraint fails
 
 -- 2.6  Subir 5 % el precio de los cursos de nivel Intermedio.
-UPDATE cursos SET precio = precio * 1.05 WHERE nivel = 'Intermedio';          -- 3 filas
+UPDATE cursos SET precio = precio * 1.05 WHERE nivel = 'Intermedio';          -- 4 filas
 SELECT nombre, nivel, precio FROM cursos;
--- Piano Intermedio 231000, Guitarra Eléctrica 178500, Batería Rock 199500
+-- Piano Intermedio 231000, Guitarra Eléctrica 178500, Batería Rock 199500,
+-- Flauta Traversa 168000
 
 -- 2.7  Asignar a Felipe Arango (profesor 6) el curso Teoría Musical.
 UPDATE cursos SET id_profesor = 6 WHERE nombre = 'Teoría Musical';            -- 1 fila
@@ -199,17 +201,17 @@ SHOW TABLES;   -- de nuevo las 5 tablas originales
 
 -- 3.1  Listar cada profesor con sus cursos: profesor, curso, cupo máximo
 --      y precio.
---      PREGUNTA: hay 8 cursos, ¿cuál falta y por qué?
+--      PREGUNTA: hay 11 cursos, ¿cuál falta y por qué?
 SELECT p.nombre AS 'profesor', c.nombre AS 'curso', c.cupo_maximo, c.precio
 FROM cursos c
 INNER JOIN profesores p
 ON c.id_profesor = p.id_profesor;
--- 7 filas: Teoría Musical no aparece (no tiene profesor)
+-- 10 filas: Teoría Musical no aparece (no tiene profesor)
 
 -- 3.2  Listar los estudiantes con sus cursos matriculados: id y nombre
 --      del estudiante, curso, precio, profesor y fecha de matrícula, de la
 --      más reciente a la más antigua.
---      PREGUNTA: hay 17 matrículas, ¿por qué salen menos filas?
+--      PREGUNTA: hay 49 matrículas, ¿por qué salen menos filas?
 SELECT e.id_estudiante, e.nombre AS 'estudiante', c.nombre AS 'curso', c.precio,
        p.nombre AS 'profesor', m.fecha_matricula
 FROM matriculas m
@@ -220,9 +222,9 @@ ON m.id_curso = c.id_curso
 INNER JOIN profesores p
 ON c.id_profesor = p.id_profesor
 ORDER BY m.fecha_matricula DESC;
--- 13 filas: las 4 matrículas de Teoría Musical se pierden en el
+-- 41 filas: las 8 matrículas de Teoría Musical se pierden en el
 -- último INNER JOIN porque ese curso no tiene profesor.
--- Con LEFT JOIN profesores aparecen las 17.
+-- Con LEFT JOIN profesores aparecen las 49.
 
 -- 3.3  COUNT. ¿Cuántos estudiantes hay? ¿Cuántos tienen correo y cuántos
 --      teléfono? Resolverlo en una sola consulta.
@@ -230,18 +232,18 @@ ORDER BY m.fecha_matricula DESC;
 SELECT COUNT(*) AS 'estudiantes', COUNT(email) AS 'con_email',
        COUNT(telefono) AS 'con_telefono'
 FROM estudiantes;
--- 12 · 10 · 11. COUNT(columna) no cuenta los NULL; COUNT(*) cuenta filas.
+-- 30 · 26 · 26. COUNT(columna) no cuenta los NULL; COUNT(*) cuenta filas.
 
 -- 3.4  SUM. ¿Cuánto ha recaudado la academia en total? ¿Cuánto ha pagado
 --      Ana Beltrán (id 1)?
-SELECT SUM(valor) AS 'total_recaudado' FROM pagos;          -- 3590000
-SELECT SUM(valor) AS 'total_ana' FROM pagos WHERE id_estudiante = 1;   -- 525000
+SELECT SUM(valor) AS 'total_recaudado' FROM pagos;          -- 39365000
+SELECT SUM(valor) AS 'total_ana' FROM pagos WHERE id_estudiante = 1;   -- 1695000
 
 -- 3.5  Obtener el total pagado por concepto.
 SELECT concepto, SUM(valor) AS 'total'
 FROM pagos
 GROUP BY concepto;
--- Matrícula 440000 · Mensualidad 3030000 · Material 120000
+-- Matrícula 1160000 · Mensualidad 37510000 · Material 695000
 
 -- 3.6  Igual que 3.5, agregando cuántos pagos hay de cada concepto y
 --      ordenando de mayor a menor total.
@@ -249,7 +251,7 @@ SELECT concepto, COUNT(*) AS 'cantidad', SUM(valor) AS 'total'
 FROM pagos
 GROUP BY concepto
 ORDER BY total DESC;
--- Mensualidad 20 · Matrícula 11 · Material 3
+-- Mensualidad 244 · Matrícula 29 · Material 16
 
 -- 3.7  Total recaudado por cada profesor (pagos de sus cursos), de mayor
 --      a menor.
@@ -261,8 +263,10 @@ INNER JOIN pagos pa
 ON pa.id_curso = c.id_curso
 GROUP BY pr.id_profesor, pr.nombre
 ORDER BY recaudado DESC;
--- Jorge Castillo 1110000 · Valentina Ríos 795000 · Natalia Vargas 445000 ·
--- Paola Jiménez 440000. Ricardo Mendoza no aparece: su curso no tiene pagos.
+-- Valentina Ríos 11435000 · Jorge Castillo 9030000 · Natalia Vargas 5195000 ·
+-- Paola Jiménez 3920000 · Gloria Pacheco 2400000 · Hernán Quintero 1980000.
+-- Ricardo Mendoza no aparece: su curso no tiene pagos. Felipe Arango
+-- tampoco: no tiene cursos.
 -- Los pagos de 'Matrícula' (id_curso NULL) no cuentan para ningún profesor.
 
 -- 3.8  Para cada matrícula, mostrar estudiante, curso, fecha de
@@ -281,7 +285,7 @@ INNER JOIN pagos pa
 ON pa.id_estudiante = m.id_estudiante AND pa.id_curso = m.id_curso
 GROUP BY e.nombre, c.nombre, m.fecha_matricula
 ORDER BY m.fecha_matricula DESC;
--- 17 filas. Ana Beltrán · Piano Básico: 395000 (2 mensualidades + material)
+-- 49 filas. Ana Beltrán · Piano Básico: 1115000 (6 mensualidades + material)
 
 
 /* =====================================================================
@@ -299,8 +303,9 @@ FROM pagos p
 INNER JOIN estudiantes e
 ON p.id_estudiante = e.id_estudiante
 ORDER BY p.valor DESC LIMIT 3;
--- Nicolás Acosta 220000 · Samuel Ortega 190000 · Juliana Rueda 190000
--- (los dos de 190000 empatan: pueden salir en cualquier orden)
+-- Tres pagos de 260000 (mensualidades de Piano Avanzado). Hay 10 pagos
+-- de 260000 empatados, de Mateo Salazar, Julián Ramírez y David Sánchez:
+-- cuáles 3 salen depende de MySQL. Con empates, LIMIT corta sin criterio.
 
 -- 4.2  LIMIT.
 --      a) El curso con más matriculados.
@@ -315,7 +320,7 @@ ON m.id_curso = c.id_curso
 GROUP BY c.id_curso, c.nombre
 ORDER BY matriculados DESC
 LIMIT 1;
--- Teoría Musical 4
+-- Teoría Musical 8
 
 -- b)
 SELECT e.nombre, SUM(p.valor) AS 'total'
@@ -325,11 +330,11 @@ ON p.id_estudiante = e.id_estudiante
 GROUP BY e.id_estudiante, e.nombre
 ORDER BY total DESC
 LIMIT 2;
--- Ana Beltrán 525000 · Luis Carrillo 480000
+-- Mateo Salazar 3160000 · Juliana Rueda 2820000
 
 -- c)
 SELECT nombre, precio FROM cursos ORDER BY precio DESC LIMIT 3 OFFSET 3;
--- Piano Básico 180000 · Guitarra Eléctrica 170000 · Guitarra Acústica 150000
+-- Batería Rock 190000 · Piano Básico 180000 · Guitarra Eléctrica 170000
 
 
 /* =====================================================================
@@ -356,7 +361,7 @@ SELECT nombre, precio FROM cursos ORDER BY precio DESC LIMIT 3 OFFSET 3;
 
 -- 5.1  Mostrar los cursos cuyo nombre empieza por 'Piano'.
 SELECT nombre FROM cursos WHERE nombre LIKE 'Piano%';
--- Piano Básico, Piano Intermedio
+-- Piano Básico, Piano Intermedio, Piano Avanzado
 
 -- 5.2  Mostrar los cursos cuyo nombre termina en 'Básico'.
 --      PREGUNTA: hay 5 cursos de nivel Básico, ¿por qué sale solo uno?
@@ -368,7 +373,9 @@ SELECT nombre FROM cursos WHERE nombre LIKE '%Básico';
 --      Luego buscar '%andres%' (sin tilde y en minúscula).
 --      PREGUNTA: ¿encuentra a Andrés Cárdenas? ¿Por qué?
 SELECT nombre FROM estudiantes WHERE nombre LIKE '%ia%';
--- Juliana Rueda, Valeria Quiroga
+-- 8 filas: Juliana Rueda, Valeria Quiroga, Mariana Gómez, Julián Ramírez,
+-- Sofía Castaño, Santiago Duarte, Natalia Prada, Lucía Fernández.
+-- Julián sale aunque se escribe con tilde (iá): LIKE no distingue tildes.
 SELECT nombre FROM estudiantes WHERE nombre LIKE '%andres%';
 -- Andrés Cárdenas. La base usa la intercalación utf8mb4_0900_ai_ci:
 -- ai = no distingue tildes, ci = no distingue mayúsculas.
@@ -383,7 +390,7 @@ SELECT documento, nombre FROM estudiantes WHERE documento LIKE '109800_';
 -- 5.5  NOT LIKE. Mostrar los cursos que NO son de guitarra (su nombre
 --      no contiene 'Guitarra').
 SELECT nombre FROM cursos WHERE nombre NOT LIKE '%Guitarra%';
--- 6 cursos: todos menos Guitarra Acústica y Guitarra Eléctrica
+-- 9 cursos: todos menos Guitarra Acústica y Guitarra Eléctrica
 
 -- 5.6  Para los cursos de piano y de guitarra: nombre del curso, nombre
 --      del profesor y total recaudado (pagos de ese curso), de mayor a
@@ -397,10 +404,11 @@ ON pa.id_curso = c.id_curso
 WHERE c.nombre LIKE 'Piano%' OR c.nombre LIKE 'Guitarra%'
 GROUP BY c.nombre, pr.nombre
 ORDER BY recaudado DESC;
--- Guitarra Acústica  Jorge Castillo  600000
--- Piano Básico       Valentina Ríos  575000
--- Guitarra Eléctrica Jorge Castillo  510000
--- Piano Intermedio   Valentina Ríos  220000
+-- Guitarra Acústica  Jorge Castillo  5460000
+-- Piano Básico       Valentina Ríos  4795000
+-- Piano Intermedio   Valentina Ríos  3960000
+-- Guitarra Eléctrica Jorge Castillo  3570000
+-- Piano Avanzado     Valentina Ríos  2680000
 
 
 /* =====================================================================
@@ -427,7 +435,7 @@ SELECT MAX(cupo_maximo) AS 'cupo_mayor' FROM cursos;
 SELECT AVG(cupo_maximo) AS 'promedio',
        ROUND(AVG(cupo_maximo), 1) AS 'redondeado'
 FROM cursos;
--- 7.2500 · 7.3
+-- 7.1818 · 7.2
 
 -- 6.4  MIN y MAX. Precio del curso más barato y del más caro. Fecha del
 --      primer y del último pago. Por último, aplicar MIN y MAX a nombre y
@@ -435,22 +443,22 @@ FROM cursos;
 --      PREGUNTA: ¿qué significan MIN y MAX sobre un texto y sobre una
 --      fecha? ¿Quién es el estudiante más joven?
 SELECT MIN(precio) AS 'mas_barato', MAX(precio) AS 'mas_caro' FROM cursos;
--- 90000 · 220000
+-- 90000 · 260000
 SELECT MIN(fecha_pago) AS 'primer_pago', MAX(fecha_pago) AS 'ultimo_pago' FROM pagos;
--- 2026-02-02 09:00:00 · 2026-05-10 12:00:00
+-- 2026-02-02 09:00:00 · 2026-10-26 10:30:00
 SELECT MIN(nombre), MAX(nombre), MIN(fecha_nacimiento), MAX(fecha_nacimiento)
 FROM estudiantes;
--- Ana Beltrán · Valeria Quiroga · 2004-04-18 · 2011-02-25
+-- Alejandro Silva · Valeria Quiroga · 2004-01-29 · 2011-11-08
 -- En texto: orden alfabético. En fechas: la más antigua y la más reciente.
--- La fecha de nacimiento MAYOR es la del más joven: Valeria Quiroga.
+-- La fecha de nacimiento MAYOR es la del más joven: Camila Vergara.
 
 -- 6.5  AVG. Precio promedio de los cursos, con y sin redondear (ROUND).
 --      Valor promedio de los pagos de 'Mensualidad'.
 SELECT AVG(precio) AS 'promedio', ROUND(AVG(precio)) AS 'promedio_redondeado'
 FROM cursos;
--- 167500.000000 · 167500
+-- 170909.090909 · 170909
 SELECT AVG(valor) AS 'promedio_mensualidad' FROM pagos WHERE concepto = 'Mensualidad';
--- 151500
+-- 153729.508197
 
 -- 6.6  GROUP BY con varias funciones.
 --      a) Por nivel de curso: cantidad de cursos, precio mínimo, máximo y
@@ -464,7 +472,8 @@ SELECT nivel, COUNT(*) AS 'cursos', MIN(precio) AS 'minimo', MAX(precio) AS 'max
 FROM cursos
 GROUP BY nivel;
 -- Básico 5 · 90000 · 200000 · 152000.00
--- Intermedio 3 · 170000 · 220000 · 193333.33
+-- Intermedio 4 · 160000 · 220000 · 185000.00
+-- Avanzado 2 · 120000 · 260000 · 190000.00
 
 -- b)
 SELECT e.nombre, COUNT(*) AS 'pagos', SUM(p.valor) AS 'total',
@@ -474,8 +483,8 @@ INNER JOIN estudiantes e
 ON p.id_estudiante = e.id_estudiante
 GROUP BY e.id_estudiante, e.nombre
 ORDER BY total DESC;
--- 11 filas: primero Ana Beltrán (5 pagos, 525000), al final Isabel Romero
--- (1 pago, 40000). Tomás no aparece: no tiene pagos y el INNER JOIN lo
+-- 29 filas: primero Mateo Salazar (21 pagos, 3160000), al final Isabel
+-- Romero (1 pago, 40000). Tomás no aparece: no tiene pagos y el INNER JOIN lo
 -- descarta antes de agrupar.
 
 
@@ -490,18 +499,18 @@ ORDER BY total DESC;
 
 -- 7.1  Mostrar los niveles de curso que existen, sin repetir.
 SELECT DISTINCT nivel FROM cursos;
--- Básico, Intermedio
+-- Básico, Intermedio, Avanzado
 
 -- 7.2  Mostrar los conceptos de pago que existen, sin repetir.
 --      PREGUNTA: ¿cuántas filas salen si se quita DISTINCT?
 SELECT DISTINCT concepto FROM pagos;
--- Matrícula, Mensualidad, Material. Sin DISTINCT salen 34 filas: una
+-- Matrícula, Mensualidad, Material. Sin DISTINCT salen 289 filas: una
 -- por cada pago.
 
 -- 7.3  ¿Cuántos estudiantes distintos han hecho al menos un pago?
 --      PREGUNTA: ¿por qué COUNT(*) da otro número?
 SELECT COUNT(DISTINCT id_estudiante) AS 'estudiantes' FROM pagos;
--- 11. COUNT(*) da 34 porque cuenta pagos, y un estudiante tiene varios.
+-- 29. COUNT(*) da 289 porque cuenta pagos, y un estudiante tiene varios.
 
 -- 7.4  DISTINCT.
 --      a) Ciudades de donde vienen los estudiantes, sin repetir.
@@ -511,18 +520,18 @@ SELECT COUNT(DISTINCT id_estudiante) AS 'estudiantes' FROM pagos;
 --      PREGUNTA: en c), ¿DISTINCT se aplica a una columna o a la fila?
 -- a)
 SELECT DISTINCT ciudad FROM estudiantes;
--- 4 ciudades: Aguachica, Ocaña, Bucaramanga, Gamarra
+-- 6 ciudades: Aguachica, Ocaña, Bucaramanga, Gamarra, San Alberto, Pelaya
 
 -- b)
 SELECT COUNT(*) AS 'filas', COUNT(DISTINCT id_estudiante) AS 'estudiantes',
        COUNT(DISTINCT id_curso) AS 'cursos'
 FROM matriculas;
--- 17 · 10 · 7
+-- 49 · 28 · 10
 
 -- c)
 SELECT DISTINCT concepto, valor FROM pagos ORDER BY concepto, valor;
--- 11 filas. DISTINCT se aplica a la fila completa: elimina las filas
--- que repiten a la vez concepto Y valor (las 11 matrículas de 40000
+-- 15 filas. DISTINCT se aplica a la fila completa: elimina las filas
+-- que repiten a la vez concepto Y valor (las 29 matrículas de 40000
 -- quedan en una sola fila).
 
 -- 7.5  DISTINCT vs GROUP BY.
@@ -538,7 +547,8 @@ SELECT ciudad FROM estudiantes GROUP BY ciudad;
 SELECT ciudad, COUNT(*) AS 'estudiantes'
 FROM estudiantes
 GROUP BY ciudad;
--- Aguachica 5 · Ocaña 3 · Bucaramanga 2 · Gamarra 2
+-- Aguachica 10 · Ocaña 7 · Bucaramanga 5 · Gamarra 4 · San Alberto 2 ·
+-- Pelaya 2
 -- Sin funciones de agregación, DISTINCT y GROUP BY dan las mismas filas.
 -- Para calcular algo POR CADA grupo (COUNT, SUM, AVG…) hace falta GROUP BY:
 -- DISTINCT solo quita repetidos.
@@ -560,14 +570,14 @@ SELECT nivel, COUNT(*) AS 'cursos'
 FROM cursos
 GROUP BY nivel
 HAVING COUNT(*) > 3;
--- Básico 5 (Intermedio tiene 3 y queda fuera)
+-- Básico 5 · Intermedio 4 (Avanzado tiene 2 y queda fuera)
 
 -- 8.2  Mostrar los conceptos de pago cuyo total supera 1000000.
 SELECT concepto, SUM(valor) AS 'total'
 FROM pagos
 GROUP BY concepto
 HAVING SUM(valor) > 1000000;
--- Mensualidad 3030000
+-- Matrícula 1160000 · Mensualidad 37510000 (Material, 695000, queda fuera)
 
 -- 8.3  Ciudades con 3 o más estudiantes y cuántos tiene cada una.
 SELECT ciudad, COUNT(*) AS 'estudiantes'
@@ -575,10 +585,10 @@ FROM estudiantes
 GROUP BY ciudad
 HAVING COUNT(*) >= 3
 ORDER BY estudiantes DESC;
--- Aguachica 5 · Ocaña 3
+-- Aguachica 10 · Ocaña 7 · Bucaramanga 5 · Gamarra 4
 
 -- 8.4  HAVING.
---      a) Estudiantes que han pagado en total más de 400000.
+--      a) Estudiantes que han pagado en total más de 2000000.
 --      b) Cursos de nivel Básico con 3 o más matriculados.
 --      PREGUNTA: en b), ¿qué condición va en WHERE y cuál en HAVING? ¿Por
 --      qué no se puede escribir WHERE COUNT(*) >= 3?
@@ -588,10 +598,10 @@ FROM pagos p
 INNER JOIN estudiantes e
 ON p.id_estudiante = e.id_estudiante
 GROUP BY e.id_estudiante, e.nombre
-HAVING SUM(p.valor) > 400000
+HAVING SUM(p.valor) > 2000000
 ORDER BY total DESC;
--- Ana Beltrán 525000 · Luis Carrillo 480000 · Mateo Salazar 470000 ·
--- Juliana Rueda 440000
+-- Mateo Salazar 3160000 · Juliana Rueda 2820000 · Valeria Quiroga 2495000 ·
+-- Nicolás Acosta 2340000 · Luis Carrillo 2200000 · Andrés Cárdenas 2110000
 
 -- b)
 SELECT c.nombre, COUNT(*) AS 'matriculados'
@@ -601,7 +611,8 @@ ON m.id_curso = c.id_curso
 WHERE c.nivel = 'Básico'
 GROUP BY c.id_curso, c.nombre
 HAVING COUNT(*) >= 3;
--- Guitarra Acústica 3 · Técnica Vocal 3 · Teoría Musical 4
+-- Piano Básico 5 · Guitarra Acústica 6 · Técnica Vocal 7 · Teoría Musical 8
+-- (Violín Inicial, el otro curso Básico, no tiene matriculados)
 -- WHERE filtra FILAS antes de agrupar (nivel); HAVING filtra GRUPOS después
 -- (COUNT). WHERE COUNT(*) falla porque cuando se evalúa WHERE todavía no
 -- existen los grupos (error 1111: Invalid use of group function).
@@ -628,7 +639,7 @@ SELECT p.nombre AS 'profesor', c.nombre AS 'curso'
 FROM profesores p
 LEFT JOIN cursos c
 ON c.id_profesor = p.id_profesor;
--- 8 filas. Felipe Arango sale con curso NULL: no dicta ningún curso.
+-- 11 filas. Felipe Arango sale con curso NULL: no dicta ningún curso.
 -- Con INNER JOIN no aparecería.
 
 -- 9.2  Repetir 3.1 de modo que aparezcan TODOS los cursos.
@@ -636,7 +647,7 @@ SELECT p.nombre AS 'profesor', c.nombre AS 'curso', c.cupo_maximo, c.precio
 FROM cursos c
 LEFT JOIN profesores p
 ON c.id_profesor = p.id_profesor;
--- 8 filas: Teoría Musical aparece con profesor NULL
+-- 11 filas: Teoría Musical aparece con profesor NULL
 
 -- 9.3  Listar los estudiantes que no están matriculados en ningún curso.
 SELECT e.nombre, e.ciudad
@@ -653,7 +664,7 @@ SELECT p.nombre AS 'profesor', c.nombre AS 'curso'
 FROM cursos c
 RIGHT JOIN profesores p
 ON c.id_profesor = p.id_profesor;
--- 8 filas, las mismas de 9.1. profesores sigue siendo la tabla que se
+-- 11 filas, las mismas de 9.1. profesores sigue siendo la tabla que se
 -- conserva completa: en 9.1 estaba a la izquierda (LEFT) y aquí a la
 -- derecha (RIGHT).
 
@@ -668,7 +679,7 @@ SELECT e.nombre, m.id_curso
 FROM estudiantes e
 LEFT JOIN matriculas m
 ON m.id_estudiante = e.id_estudiante;
--- 19 filas: las 17 matrículas más Tomás Navarro e Isabel Romero, con
+-- 51 filas: las 49 matrículas más Tomás Navarro e Isabel Romero, con
 -- id_curso NULL porque no están matriculados. Basta con cambiar el
 -- orden de las tablas: la que se conserva completa va en el FROM.
 
@@ -682,7 +693,8 @@ LEFT JOIN matriculas m
 ON c.id_curso = m.id_curso
 GROUP BY c.id_curso, c.nombre, c.cupo_maximo
 ORDER BY matriculados DESC;
--- Teoría Musical 4 … Violín Inicial 0 (5 cupos libres)
+-- 11 filas: Teoría Musical 8 (7 libres) … Violín Inicial 0 (5 libres).
+-- Piano Intermedio (4 de 4) y Piano Avanzado (3 de 3) están llenos.
 
 
 /* =====================================================================
@@ -695,13 +707,15 @@ ORDER BY matriculados DESC;
 
 -- 10.1 Todo junto. Por mes de pago (DATE_FORMAT(fecha_pago, '%Y-%m')):
 --      cantidad de pagos, total y promedio redondeado, solo de los meses
---      que recaudaron 1000000 o más, ordenado por mes.
+--      que recaudaron 5000000 o más, ordenado por mes.
 SELECT DATE_FORMAT(fecha_pago, '%Y-%m') AS 'mes', COUNT(*) AS 'pagos',
        SUM(valor) AS 'total', ROUND(AVG(valor)) AS 'promedio'
 FROM pagos
 GROUP BY mes
-HAVING SUM(valor) >= 1000000
+HAVING SUM(valor) >= 5000000
 ORDER BY mes;
--- 2026-02 · 12 · 1195000 · 99583
--- 2026-03 · 12 · 1470000 · 122500
--- (abril recaudó 885000 y mayo 40000: quedan fuera por el HAVING)
+-- 2026-06 · 47 · 5850000 · 124468
+-- 2026-07 · 53 · 7225000 · 136321
+-- 2026-08 · 48 · 7210000 · 150208
+-- 2026-09 · 41 · 6255000 · 152561
+-- (febrero a mayo y octubre recaudaron menos de 5000000: quedan fuera)
